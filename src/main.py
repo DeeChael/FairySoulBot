@@ -25,7 +25,6 @@ def main():
 
 
 class _KookGuild:
-
     name: str
     id: str
     master_name: str
@@ -111,17 +110,17 @@ async def button_clicked(b: Bot, event: Event):
             player = await hypixel_client.fetch_player_info(uuid=total_information[0])
             profile_id = total_information[1]
             profile = await hypixel_client.fetch_skyblock_profile(profile_id)
-            await kook_bot.send(PublicTextChannel(_gate_=kook_bot.client.gate,
-                                                  id=channel_id),
-                                await messages.skyblock_stats_info(kook_bot, storage, player, profile))
+            await kook_bot.client.send(PublicTextChannel(_gate_=kook_bot.client.gate,
+                                                         id=channel_id),
+                                       await messages.skyblock_stats_info(kook_bot, storage, player, profile))
         elif value.startswith('mayor_'):
             mayor_name = value[6:]
             election_data = await hypixel_client.fetch_election()
             for mayor in election_data['current']['candidates']:
                 if mayor['name'] == mayor_name:
-                    await kook_bot.send(PublicTextChannel(_gate_=kook_bot.client.gate,
-                                                          id=channel_id),
-                                        messages.skyblock_stats_election_single_mayor(mayor))
+                    await kook_bot.client.send(PublicTextChannel(_gate_=kook_bot.client.gate,
+                                                                 id=channel_id),
+                                               messages.skyblock_stats_election_single_mayor(mayor))
                     break
             ...
 
@@ -133,8 +132,6 @@ if config.contains('bot-market'):
             session.headers.add('uuid', config.get('bot-market'))
             async with session.post("http://bot.gekj.net/api/v1/online.bot") as response:
                 logging.debug((await response.json())['msg'])
-
-
 
 if __name__ == '__main__':
     main()

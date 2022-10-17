@@ -1,6 +1,6 @@
 from typing import Union
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, TCPConnector
 from khl import Message
 
 from configuration import Configuration, MemoryConfiguration
@@ -15,7 +15,7 @@ def require(parent: Union[dict, Configuration], key: str, message: str):
 
 
 async def fetch_url_bytes(url: str) -> bytes:
-    async with ClientSession() as session:
+    async with ClientSession(connector=TCPConnector(verify_ssl=False)) as session:
         async with session.get(url) as response:
             if response.status == 200:
                 return await response.read()

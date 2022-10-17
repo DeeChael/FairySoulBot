@@ -2,7 +2,7 @@ import asyncio
 import datetime
 from typing import Union
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, TCPConnector
 
 
 def _calc_player_level(xp: Union[float, int]) -> float:
@@ -48,7 +48,7 @@ class SkyblockProfile:
 class HypixelClient:
 
     _lock = asyncio.Lock()
-    _session = ClientSession()
+    _session = ClientSession(connector=TCPConnector(verify_ssl=False))
 
     _headers: dict
 

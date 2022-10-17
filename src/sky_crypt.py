@@ -1,6 +1,6 @@
 from typing import List
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, TCPConnector
 
 
 class Pet:
@@ -34,7 +34,7 @@ class Profile:
 
 
 async def get_profile(player_name: str) -> dict:
-    async with ClientSession() as session:
+    async with ClientSession(connector=TCPConnector(verify_ssl=False)) as session:
         async with session.get(f'https://sky.shiiyu.moe/api/v2/profile/{player_name}') as response:
             if response.status == 200:
                 return await response.json()

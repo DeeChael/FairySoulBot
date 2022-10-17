@@ -215,6 +215,7 @@ async def skyblock_stats_find(bot: Bot, storage: FairySoulStorage, player: Playe
                               skyblock_data: SkyblockProfile) -> CardMessage:
     uuid = player.uuid
     card = Card()
+    card.append(Module.Header(f"| 玩家查询 | {player.name}"))
     card.append(Module.Section(
         text=Element.Text(f'**玩家名称**: {player.name}\n'
                           f'**UUID**: {player.uuid}\n'
@@ -237,6 +238,7 @@ async def skyblock_stats_find(bot: Bot, storage: FairySoulStorage, player: Playe
                        # value=f'fairysoul_bot_skyblock_info_{uuid}_{skyblock_data.id}'
                        )
     ))
+    card.append(Module.Divider())
     card.append(
         Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)

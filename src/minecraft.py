@@ -1,14 +1,14 @@
 from typing import Union
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, TCPConnector
 
 
 async def fetch_uuid(player_name: str) -> Union[str, None]:
-    async with ClientSession() as session:
-        async with session.get(f'https://api.mojang.com/users/profiles/minecraft/{player_name}') as response:
+    async with ClientSession(connector=TCPConnector(verify_ssl=False)) as session:
+        async with session.get(f'https://api.minetools.eu/uuid/{player_name}', verify_ssl=False) as response:
             if response.status == 200:
                 response = await response.json()
-                if 'name' in response and 'id' in response:
+                if response['status'] == "OK":
                     return response['id']
     return None
 
