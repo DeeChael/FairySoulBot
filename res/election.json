@@ -1,0 +1,166 @@
+{
+    "success": true,
+    "lastUpdated": 1665658122809,
+    "mayor": {
+        "key": "slayer",
+        "name": "Aatrox",
+        "perks": [
+            {
+                "name": "Slayer XP Buff",
+                "description": "Earn §d25% §7more Slayer XP."
+            },
+            {
+                "name": "Pathfinder",
+                "description": "Gain rare drops §d20% §7more often."
+            }
+        ],
+        "election": {
+            "year": 235,
+            "candidates": [
+                {
+                    "key": "mining",
+                    "name": "Cole",
+                    "perks": [
+                        {
+                            "name": "Prospection",
+                            "description": "Mining minions work §a25% §7faster."
+                        }
+                    ],
+                    "votes": 27598
+                },
+                {
+                    "key": "slayer",
+                    "name": "Aatrox",
+                    "perks": [
+                        {
+                            "name": "Slayer XP Buff",
+                            "description": "Earn §d25% §7more Slayer XP."
+                        },
+                        {
+                            "name": "Pathfinder",
+                            "description": "Gain rare drops §d20% §7more often."
+                        }
+                    ],
+                    "votes": 468722
+                },
+                {
+                    "key": "pets",
+                    "name": "Diana",
+                    "perks": [
+                        {
+                            "name": "Mythological Ritual",
+                            "description": "Mayor Diana will sell the Griffin pet, which lets you find §2Mythological Creatures §7and tons of §eunique items§7."
+                        }
+                    ],
+                    "votes": 48798
+                },
+                {
+                    "key": "economist",
+                    "name": "Diaz",
+                    "perks": [
+                        {
+                            "name": "Barrier Street",
+                            "description": "Gain §625% §7more bank interest."
+                        },
+                        {
+                            "name": "Shopping Spree",
+                            "description": "Increase daily NPC buy limits by §e10x§7."
+                        }
+                    ],
+                    "votes": 29123
+                },
+                {
+                    "key": "events",
+                    "name": "Foxy",
+                    "perks": [
+                        {
+                            "name": "Benevolence",
+                            "description": "Gain §c2.5x §7gifts from the attack event on Jerry's Workshop."
+                        },
+                        {
+                            "name": "Sweet Tooth",
+                            "description": "Grants §a+20% §7chance to get Candy from mobs during the §6Spooky Festival§7."
+                        },
+                        {
+                            "name": "Extra Event",
+                            "description": "Schedules an extra §bFishing Festival §7event during the year."
+                        }
+                    ],
+                    "votes": 95679
+                }
+            ]
+        }
+    },
+    "current": {
+        "year": 236,
+        "candidates": [
+            {
+                "key": "events",
+                "name": "Foxy",
+                "perks": [
+                    {
+                        "name": "Benevolence",
+                        "description": "Gain §c2.5x §7gifts from the attack event on Jerry's Workshop."
+                    },
+                    {
+                        "name": "Sweet Tooth",
+                        "description": "Grants §a+20% §7chance to get Candy from mobs during the §6Spooky Festival§7."
+                    },
+                    {
+                        "name": "Extra Event",
+                        "description": "Schedules an extra §6Mining Fiesta §7event during the year."
+                    }
+                ],
+                "votes": 65459
+            },
+            {
+                "key": "mining",
+                "name": "Cole",
+                "perks": [
+                    {
+                        "name": "Prospection",
+                        "description": "Mining minions work §a25% §7faster."
+                    }
+                ],
+                "votes": 23851
+            },
+            {
+                "key": "fishing",
+                "name": "Marina",
+                "perks": [
+                    {
+                        "name": "Fishing Festival",
+                        "description": "Start a special fishing event the first §b3 §7days of each month!"
+                    },
+                    {
+                        "name": "Fishing XP Buff",
+                        "description": "Gain §3+50☯ Fishing Wisdom §7on public islands."
+                    }
+                ],
+                "votes": 339032
+            },
+            {
+                "key": "dungeons",
+                "name": "Paul",
+                "perks": [
+                    {
+                        "name": "EZPZ",
+                        "description": "Gain §e10 §7bonus score on dungeon runs."
+                    }
+                ],
+                "votes": 41642
+            },
+            {
+                "key": "pets",
+                "name": "Diana",
+                "perks": [
+                    {
+                        "name": "Mythological Ritual",
+                        "description": "Mayor Diana will sell the Griffin pet, which lets you find §2Mythological Creatures §7and tons of §eunique items§7."
+                    }
+                ],
+                "votes": 52957
+            }
+        ]
+    }
+}
