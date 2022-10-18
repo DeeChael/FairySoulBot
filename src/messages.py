@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 
 from khl import User, Bot
 from khl.card import CardMessage, Types, Card, Module, Element, Struct
@@ -156,6 +156,66 @@ async def skyblock_stats_election(bot: Bot, hypixel_client: HypixelClient, stora
     return CardMessage(card)
 
 
+async def skyblock_stats_dungeon(bot: Bot, storage: FairySoulStorage, player: Player, profile: SkyblockProfile) -> CardMessage:
+    async def icon(emoji_id: str) -> str:
+        return await utils.emoji(bot, '2367879939990919', emoji_id)
+    skyblock_data = profile.extra['members'][player.uuid.replace("-", "")]
+    sky_crypt_data = await sky_crypt.get_profile(player.name)
+    sky_crypt_data = sky_crypt_data['profiles'][profile.id]
+    card = Card()
+    card.append(Module.Header(f"| 地下城 | {player.name}"))
+    card.append(Module.Divider())
+    card.append(Module.Section(Element.Text(f'**地下城等级**: {icon("fairysoul_skills_dungeoneering")}', type=Types.Text.KMD)))
+    card.append(Module.Divider())
+    card.append(Module.Section(Element.Text(f'**当前选择职业**: {sky_crypt_data["data"]["dungeons"]["selected_class"]}', type=Types.Text.KMD)))
+    classes_elements = list()
+    for class_name in sky_crypt_data['data']['dungeons']['classes'].keys():
+        localized_name = skyblock_utils.dungeon_class_id_to_name(class_name)
+        level = skyblock_data['data']['dungeons']['classes'][class_name]['experience']['level']
+        classes_elements.append(Element.Text(f'{icon(f"fairysoul_dungeon_class_{class_name}")} **{localized_name}**: {level}', type=Types.Text.KMD))
+    card.append(Module.Section(Struct.Paragraph(3, *classes_elements)))
+    card.append(Module.Divider())
+    essence_elements = list()
+    for essence_name in skyblock_data['data']['essence']:
+        essence_elements.append(Element.Text(f'{icon(f"fairysoul_essence_{essence_name}")} {skyblock_data["data"]["essence"][essence_name]}', type=Types.Text.KMD))
+    card.append(Module.Divider())
+    card.append(Module.Section(Struct.Paragraph(3, *essence_elements)))
+    card.append(
+        Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
+    return CardMessage(card)
+
+
+async def skyblock_stats_slayer(bot: Bot, storage: FairySoulStorage, player: Player, profile: SkyblockProfile) -> CardMessage:
+    async def icon(emoji_id: str) -> str:
+        return await utils.emoji(bot, '2367879939990919', emoji_id)
+    skyblock_data = profile.extra['members'][player.uuid.replace("-", "")]
+    sky_crypt_data = await sky_crypt.get_profile(player.name)
+    sky_crypt_data = sky_crypt_data['profiles'][profile.id]
+    card = Card()
+    card.append(Module.Header(f"| 猎手 | {player.name}"))
+    card.append(Module.Divider())
+    card.append(Module.Section(Element.Text(f'**猎手**', type=Types.Text.KMD)))
+    card.append(Module.Section(
+        Struct.Paragraph(
+            3,
+            Element.Text(f'{await icon("fairysoul_slayer_zombie")} **僵尸**: {sky_crypt_data["data"]["slayers"]["zombie"]["level"]["currentLevel"]}',
+                         type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_slayer_spider")} **蜘蛛**: {sky_crypt_data["data"]["slayers"]["spider"]["level"]["currentLevel"]}',
+                         type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_slayer_wolf")} **狼**: {sky_crypt_data["data"]["slayers"]["wolf"]["level"]["currentLevel"]}',
+                         type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_slayer_enderman")} **末影人**: {sky_crypt_data["data"]["slayers"]["enderman"]["level"]["currentLevel"]}',
+                         type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_slayer_blaze")} **烈焰人**: {sky_crypt_data["data"]["slayers"]["blaze"]["level"]["currentLevel"]}',
+                         type=Types.Text.KMD),
+        )
+    ))
+    card.append(Module.Divider())
+    card.append(
+        Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
+    return CardMessage(card)
+
+
 async def skyblock_stats_info(bot: Bot, storage: FairySoulStorage, player: Player,
                               profile: SkyblockProfile) -> CardMessage:
     async def icon(emoji_id: str) -> str:
@@ -270,29 +330,12 @@ async def skyblock_stats_info(bot: Bot, storage: FairySoulStorage, player: Playe
         )
     ))
     card.append(Module.Divider())
-    card.append(Module.Section(Element.Text(f'**猎手**', type=Types.Text.KMD)))
-    card.append(Module.Section(
-        Struct.Paragraph(
-            3,
-            Element.Text(f'**僵尸**: {sky_crypt_data["data"]["slayers"]["zombie"]["level"]["currentLevel"]}',
-                         type=Types.Text.KMD),
-            Element.Text(f'**蜘蛛**: {sky_crypt_data["data"]["slayers"]["spider"]["level"]["currentLevel"]}',
-                         type=Types.Text.KMD),
-            Element.Text(f'**狼**: {sky_crypt_data["data"]["slayers"]["wolf"]["level"]["currentLevel"]}',
-                         type=Types.Text.KMD),
-            Element.Text(f'**末影人**: {sky_crypt_data["data"]["slayers"]["enderman"]["level"]["currentLevel"]}',
-                         type=Types.Text.KMD),
-            Element.Text(f'**烈焰人**: {sky_crypt_data["data"]["slayers"]["blaze"]["level"]["currentLevel"]}',
-                         type=Types.Text.KMD),
-        )
-    ))
-    card.append(Module.Divider())
     card.append(Module.Section(Element.Text('**其他**', type=Types.Text.KMD)))
     card.append(Module.Section(
         Element.Text(f'**当前宠物**: {actived_pet}\n'
                      f'{await icon("fairysoul_fairysoul")} **仙女之魂**: {skyblock_data["fairy_souls_collected"]}\n'
                      f'{await icon("fairysoul_stats_strength")} **最高伤害**: {skyblock_data["stats"]["highest_damage"]}\n'
-                     f'{await icon("fairysoul_coins")} **钱包**: {skyblock_data["coin_purse"]}', type=Types.Text.KMD),
+                     f'{await icon("fairysoul_coins")} **钱包**: {sky_crypt_data["data"]["purse"]}', type=Types.Text.KMD),
     ))
     card.append(Module.Divider())
     card.append(
@@ -301,33 +344,47 @@ async def skyblock_stats_info(bot: Bot, storage: FairySoulStorage, player: Playe
 
 
 async def skyblock_stats_find(bot: Bot, storage: FairySoulStorage, player: Player,
-                              skyblock_data: SkyblockProfile) -> CardMessage:
+                              skyblock_data: List[SkyblockProfile]) -> CardMessage:
     uuid = player.uuid
     card = Card()
     card.append(Module.Header(f"| 玩家查询 | {player.name}"))
+    cute_name = 'None'
+    for skyblock_profile in skyblock_data:
+        if skyblock_profile.selected:
+            cute_name = skyblock_profile.cute_name
     card.append(Module.Section(
         text=Element.Text(f'**玩家名称**: {player.name}\n'
                           f'**UUID**: {player.uuid}\n'
                           f'**等级**: {player.level}\n'
                           f'**最后在线**: {player.last_login}\n'
-                          f'**当前档案**: {skyblock_data.cute_name}', type=Types.Text.KMD),
+                          f'**当前档案**: {cute_name}', type=Types.Text.KMD),
         mode=Types.SectionMode.RIGHT,
         accessory=Element.Image(
             await storage.load_picture(f'player_skin_{uuid.replace("-", "")}', f'https://crafatar.com/avatars/{uuid}'))
     ))
-    card.append(Module.ActionGroup(
-        Element.Button('基本信息',
-                       theme=Types.Theme.PRIMARY,
-                       click=Types.Click.RETURN_VAL,
-                       value=f'fairysoul_bot_skyblock_info_{uuid}_{skyblock_data.id}'),
-        Element.Button('敬请期待',
-                       theme=Types.Theme.SECONDARY,
-                       click=Types.Click.RETURN_VAL,
-                       value="coming_soon"
-                       # value=f'fairysoul_bot_skyblock_info_{uuid}_{skyblock_data.id}'
-                       )
-    ))
     card.append(Module.Divider())
+    for skyblock_profile in skyblock_data:
+        card.append(Module.ActionGroup(
+            Element.Button('基本信息',
+                           theme=Types.Theme.PRIMARY,
+                           click=Types.Click.RETURN_VAL,
+                           value=f'fairysoul_bot_skyblock_info_{uuid}_{skyblock_profile.id}'),
+            Element.Button('猎手',
+                           theme=Types.Theme.PRIMARY,
+                           click=Types.Click.RETURN_VAL,
+                           value=f'fairysoul_bot_skyblock_slayer_{uuid}_{skyblock_profile.id}'),
+            Element.Button('地下城',
+                           theme=Types.Theme.PRIMARY,
+                           click=Types.Click.RETURN_VAL,
+                           value=f'fairysoul_bot_skyblock_dungeon_{uuid}_{skyblock_profile.id}'),
+            Element.Button('敬请期待',
+                           theme=Types.Theme.SECONDARY,
+                           click=Types.Click.RETURN_VAL,
+                           value="coming_soon"
+                           # value=f'fairysoul_bot_skyblock_info_{uuid}_{skyblock_data.id}'
+                           )
+        ))
+        card.append(Module.Divider())
     card.append(
         Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)

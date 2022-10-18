@@ -30,10 +30,12 @@ class SkyblockProfile:
     _id: str
     _cute_name: str
     extra: dict
+    selected: bool
 
     def __init__(self, data: dict):
         self._id = data.get('profile_id', '')
         self._cute_name = data.get('cute_name', '')
+        self.selected = data.get('selected', False)
         self.extra = data
 
     @property
@@ -74,8 +76,8 @@ class HypixelClient:
                                          headers=self._headers, timeout=10) as response:
                 if response.status == 200:
                     for profile in (await response.json())['profiles']:
-                        if profile['selected']:
-                            return SkyblockProfile(profile)
+                        return SkyblockProfile(profile)
+
 
     async def fetch_skyblock_profile(self, uuid: str) -> SkyblockProfile:
         async with self._lock:

@@ -176,6 +176,22 @@ async def button_clicked(b: Bot, event: Event):
             await kook_bot.client.send(PublicTextChannel(_gate_=kook_bot.client.gate,
                                                          id=channel_id),
                                        await messages.skyblock_stats_info(kook_bot, storage, player, profile))
+        elif value.startswith('slayer_'):
+            total_information = value[7:].split("_")
+            player = await hypixel_client.fetch_player_info(uuid=total_information[0])
+            profile_id = total_information[1]
+            profile = await hypixel_client.fetch_skyblock_profile(profile_id)
+            await kook_bot.client.send(PublicTextChannel(_gate_=kook_bot.client.gate,
+                                                         id=channel_id),
+                                       await messages.skyblock_stats_slayer(kook_bot, storage, player, profile))
+        elif value.startswith('dungeon_'):
+            total_information = value[8:].split("_")
+            player = await hypixel_client.fetch_player_info(uuid=total_information[0])
+            profile_id = total_information[1]
+            profile = await hypixel_client.fetch_skyblock_profile(profile_id)
+            await kook_bot.client.send(PublicTextChannel(_gate_=kook_bot.client.gate,
+                                                         id=channel_id),
+                                       await messages.skyblock_stats_dungeon(kook_bot, storage, player, profile))
         elif value.startswith('mayor_'):
             mayor_name = value[6:]
             election_data = await hypixel_client.fetch_election()
