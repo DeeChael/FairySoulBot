@@ -6,6 +6,14 @@ from khl import Message, Bot
 from configuration import Configuration, MemoryConfiguration
 
 
+def is_int(number: str) -> bool:
+    try:
+        int(number)
+        return True
+    except ValueError:
+        return False
+
+
 def require(parent: Union[dict, Configuration], key: str, message: str):
     if isinstance(parent, dict):
         parent = MemoryConfiguration(parent)

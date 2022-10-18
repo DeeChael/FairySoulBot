@@ -6,9 +6,8 @@ from typing import Dict, List
 
 from khl import Bot
 
-from configuration import JsonConfiguration
-
 import utils
+from configuration import JsonConfiguration
 
 
 class FairySoulStorage(ABC):
@@ -42,7 +41,6 @@ class FairySoulJsonStorage(FairySoulStorage):
 
 
 class FairySoulSqliteStorage(FairySoulStorage):
-
     _file: str
     _cache: Dict[str, str] = dict()
     _keys: List[str] = list()
@@ -80,14 +78,14 @@ class FairySoulSqliteStorage(FairySoulStorage):
                     self._cache[row[0]] = row[1]
                     break
         result = self._cache[key]
-        if len(self._cache) > 1024: # prevent out of memory
+        if len(self._cache) > 1024:  # prevent out of memory
             self._cache.clear()
         return result
 
     def _load_cache(self, cursor: Cursor):
         cc = cursor.execute("SELECT PIC_KEY, PIC_URL from `fairy_soul_pics`;")
         for row in cc:
-            if len(self._cache) >= 512: # Only cache 512 of the pics
+            if len(self._cache) >= 512:  # Only cache 512 of the pics
                 break
             self._cache[row[0]] = row[1]
             self._keys.append(row[0])

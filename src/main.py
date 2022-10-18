@@ -3,13 +3,12 @@ import logging
 from aiohttp import ClientSession
 from khl import Bot, Message, EventTypes, Event, PublicTextChannel, api, User
 
+import messages
+import minecraft
+import utils
 from configuration import JsonConfiguration
 from hypixel import HypixelClient
 from storage import FairySoulSqliteStorage
-
-import messages
-import utils
-import minecraft
 
 config = JsonConfiguration("data/config.json")
 
@@ -64,6 +63,18 @@ async def admin_command(msg: Message, *args):
             await msg.reply(joined)
 
 
+@kook_bot.command(prefixes=['/', '.', '。'], name="fairysoul")
+async def fairysoul_command(msg: Message, *args):
+    if len(args) == 1:
+        if not await utils.require_str(args[0], msg):
+            return
+        arg0 = args[0].lower()
+        if arg0 == 'help':
+            await msg.reply(messages.fairysoul_help())
+    else:
+        await msg.reply(messages.fairysoul_gotohelp(msg.author))
+
+
 @kook_bot.command(prefixes=['/', '.', '。'], name='skyblock', aliases=['sb'])
 async def skyblock_command(msg: Message, *args):
     if len(args) == 1:
@@ -91,7 +102,59 @@ async def skyblock_command(msg: Message, *args):
             player = await hypixel_client.fetch_player_info(uuid=uuid)
             skyblock_data = await hypixel_client.fetch_skyblock_profiles(uuid)
             await msg.reply(await messages.skyblock_stats_find(kook_bot, storage, player, skyblock_data))
-            ...
+        else:
+            await msg.reply(messages.skyblock_gotohelp(msg.author))
+    elif len(args) == 3:
+        if not await utils.require_str(args[0], msg):
+            return
+        arg0 = args[0].lower()
+        if arg0 == 'calc':
+            if not await utils.require_str(args[1], msg):
+                return
+            calc_type = args[1]
+            if calc_type == 'help':
+                await msg.reply(messages.skyblock_calc_help())
+        else:
+            await msg.reply(messages.skyblock_calc_gotohelp(msg.author))
+    elif len(args) == 5:
+        if not await utils.require_str(args[0], msg):
+            return
+        arg0 = args[0].lower()
+        if arg0 == 'calc':
+            if not await utils.require_str(args[1], msg):
+                return
+            calc_type = args[1]
+            if calc_type == 'damage':
+                damage = args[2]
+                strength = args[3]
+                crit = args[4]
+                if not (utils.is_int(damage) and utils.is_int(strength) and utils.is_int(crit)):
+                    await msg.reply(messages.require_integer(msg.author))
+                else:
+                    final = int(
+                        (5 + damage) * (1 + (strength / 100)) * (1 + (crit / 100)) * (1 + (1 / 100)) * (1 + (1 / 100)))
+                    await msg.reply(messages.skyblock_calc_result(final))
+            else:
+                await msg.reply(messages.skyblock_calc_gotohelp(msg.author))
+        elif len(args) == 6:
+            if not await utils.require_str(args[1], msg):
+                return
+            calc_type = args[1]
+            if calc_type == 'ability':
+                damage = args[2]
+                intelligence = args[3]
+                scaling = args[4]
+                crit = args[5]
+                if not (utils.is_int(damage) and utils.is_int(intelligence) and utils.is_int(scaling) and utils.is_int(
+                        crit)):
+                    await msg.reply(messages.require_integer(msg.author))
+                else:
+                    final = int(
+                        (5 + damage) * (1 + ((intelligence / 100) * scaling)) * (1 + (crit / 100)) * (1 + (1 / 100)) * (
+                                    1 + (1 / 100)))
+                    await msg.reply(messages.skyblock_calc_result(final))
+            else:
+                await msg.reply(messages.skyblock_calc_gotohelp(msg.author))
         else:
             await msg.reply(messages.skyblock_gotohelp(msg.author))
     else:
@@ -132,7 +195,6 @@ if config.contains('bot-market'):
             session.headers.add('uuid', config.get('bot-market'))
             async with session.post("http://bot.gekj.net/api/v1/online.bot") as response:
                 logging.debug((await response.json())['msg'])
-
 
 if __name__ == '__main__':
     main()
