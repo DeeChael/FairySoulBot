@@ -1,6 +1,6 @@
 import asyncio
 import datetime
-from typing import Union
+from typing import Union, List
 
 from aiohttp import ClientSession, TCPConnector
 
@@ -70,14 +70,12 @@ class HypixelClient:
                 if response.status == 200:
                     return Player((await response.json())['player'])
 
-    async def fetch_skyblock_profiles(self, uuid: str) -> SkyblockProfile:
+    async def fetch_skyblock_profiles(self, uuid: str) -> List[SkyblockProfile]:
         async with self._lock:
             async with self._session.get("https://api.hypixel.net/skyblock/profiles", params={'uuid': uuid},
                                          headers=self._headers, timeout=10) as response:
                 if response.status == 200:
-                    for profile in (await response.json())['profiles']:
-                        return SkyblockProfile(profile)
-
+                    return [SkyblockProfile(profile) for profile in (await response.json())['profiles']]
 
     async def fetch_skyblock_profile(self, uuid: str) -> SkyblockProfile:
         async with self._lock:

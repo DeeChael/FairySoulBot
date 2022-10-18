@@ -71,6 +71,10 @@ async def fairysoul_command(msg: Message, *args):
         arg0 = args[0].lower()
         if arg0 == 'help':
             await msg.reply(messages.fairysoul_help())
+        elif arg0 == 'commands':
+            ...
+        else:
+            await msg.reply(messages.fairysoul_gotohelp(msg.author))
     else:
         await msg.reply(messages.fairysoul_gotohelp(msg.author))
 
@@ -102,20 +106,16 @@ async def skyblock_command(msg: Message, *args):
             player = await hypixel_client.fetch_player_info(uuid=uuid)
             skyblock_data = await hypixel_client.fetch_skyblock_profiles(uuid)
             await msg.reply(await messages.skyblock_stats_find(kook_bot, storage, player, skyblock_data))
-        else:
-            await msg.reply(messages.skyblock_gotohelp(msg.author))
-    elif len(args) == 3:
-        if not await utils.require_str(args[0], msg):
-            return
-        arg0 = args[0].lower()
-        if arg0 == 'calc':
+        elif arg0 == 'calc':
             if not await utils.require_str(args[1], msg):
                 return
             calc_type = args[1]
             if calc_type == 'help':
                 await msg.reply(messages.skyblock_calc_help())
+            else:
+                await msg.reply(messages.skyblock_calc_gotohelp(msg.author))
         else:
-            await msg.reply(messages.skyblock_calc_gotohelp(msg.author))
+            await msg.reply(messages.skyblock_gotohelp(msg.author))
     elif len(args) == 5:
         if not await utils.require_str(args[0], msg):
             return
@@ -136,7 +136,13 @@ async def skyblock_command(msg: Message, *args):
                     await msg.reply(messages.skyblock_calc_result(final))
             else:
                 await msg.reply(messages.skyblock_calc_gotohelp(msg.author))
-        elif len(args) == 6:
+        else:
+            await msg.reply(messages.skyblock_gotohelp(msg.author))
+    elif len(args) == 6:
+        if not await utils.require_str(args[0], msg):
+            return
+        arg0 = args[0].lower()
+        if arg0 == 'calc':
             if not await utils.require_str(args[1], msg):
                 return
             calc_type = args[1]
@@ -151,7 +157,7 @@ async def skyblock_command(msg: Message, *args):
                 else:
                     final = int(
                         (5 + damage) * (1 + ((intelligence / 100) * scaling)) * (1 + (crit / 100)) * (1 + (1 / 100)) * (
-                                    1 + (1 / 100)))
+                                1 + (1 / 100)))
                     await msg.reply(messages.skyblock_calc_result(final))
             else:
                 await msg.reply(messages.skyblock_calc_gotohelp(msg.author))
@@ -201,7 +207,6 @@ async def button_clicked(b: Bot, event: Event):
                                                                  id=channel_id),
                                                messages.skyblock_stats_election_single_mayor(mayor))
                     break
-            ...
 
 
 if config.contains('bot-market'):

@@ -130,3 +130,5 @@ dmypy.json
 /src/data/config.json
 
 .idea
+
+test.py

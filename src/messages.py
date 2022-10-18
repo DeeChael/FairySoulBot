@@ -25,7 +25,7 @@ def fairysoul_help() -> CardMessage:
             Module.Header("| 仙女之魂 | 帮助"),
             Module.Section('/fairysoul logs - 查看 仙女之魂 Fairy Soul 更新日志\n'
                            '/fairysoul commands - 列出 仙女之魂 Fairy Soul 的指令列表'),
-            Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)),
+            Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)),
             theme=Types.Theme.PRIMARY
         )
     )
@@ -36,8 +36,9 @@ def skyblock_help() -> CardMessage:
         Card(
             Module.Header("| 仙女之魂 | 空岛生存 | 帮助"),
             Module.Section('/skyblock find <玩家名称> - 查询玩家空岛生存的信息\n'
-                           '/skyblock election - 查询市长选举信息'),
-            Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)),
+                           '/skyblock election - 查询市长选举信息\n'
+                           '/skyblock calc help - 获取计算器使用说明'),
+            Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)),
             theme=Types.Theme.PRIMARY
         )
     )
@@ -49,7 +50,7 @@ def skyblock_calc_help() -> CardMessage:
             Module.Header("| 仙女之魂 | 空岛生存 | 计算器 | 帮助"),
             Module.Section('/skyblock calc damage <武器伤害> <总力量值> <暴击伤害> - 计算伤害数值\n'
                            '/skyblock calc ability <基础技能伤害> <智力> <能力拓展> <暴击伤害> - 计算技能伤害数值'),
-            Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)),
+            Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)),
             theme=Types.Theme.PRIMARY
         )
     )
@@ -59,7 +60,7 @@ def skyblock_calc_result(value: int) -> CardMessage:
     return CardMessage(
         Card(
             Module.Section(Element.Text(f"**计算结果**: {value}\n计算结果不一定准确，游戏内还有装备加成、附魔、战斗等级加成等影响", type=Types.Text.KMD)),
-            Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)),
+            Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)),
             theme=Types.Theme.SUCCESS
         )
     )
@@ -99,6 +100,9 @@ def skyblock_stats_election_single_mayor(mayor_info: dict) -> CardMessage:
                 f'**{_process_minecraft_color(perk["name"])}**\n{_process_minecraft_color(perk["description"])}',
                 type=Types.Text.KMD))
         card.append(Module.Section(Struct.Paragraph(3, *fields)))
+    card.append(Module.Divider())
+    card.append(
+        Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)
 
 
@@ -153,6 +157,9 @@ async def skyblock_stats_election(bot: Bot, hypixel_client: HypixelClient, stora
                 value=f'fairysoul_bot_skyblock_mayor_{competitor["name"]}'),
             ))
     card.append(Module.Section(Element.Text(f'**总票数**: {total} 票', type=Types.Text.KMD)))
+    card.append(Module.Divider())
+    card.append(
+        Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)
 
 
@@ -163,25 +170,25 @@ async def skyblock_stats_dungeon(bot: Bot, storage: FairySoulStorage, player: Pl
     sky_crypt_data = await sky_crypt.get_profile(player.name)
     sky_crypt_data = sky_crypt_data['profiles'][profile.id]
     card = Card()
-    card.append(Module.Header(f"| 地下城 | {player.name}"))
+    card.append(Module.Header(f"| 地下城 | {player.name} | {sky_crypt_data.get('cute_name')}"))
     card.append(Module.Divider())
-    card.append(Module.Section(Element.Text(f'**地下城等级**: {icon("fairysoul_skills_dungeoneering")}', type=Types.Text.KMD)))
+    card.append(Module.Section(Element.Text(f'{await icon("fairysoul_skills_dungeoneering")} **地下城等级**: {sky_crypt_data["data"]["dungeons"]["catacombs"]["level"]["level"]}', type=Types.Text.KMD)))
     card.append(Module.Divider())
     card.append(Module.Section(Element.Text(f'**当前选择职业**: {sky_crypt_data["data"]["dungeons"]["selected_class"]}', type=Types.Text.KMD)))
     classes_elements = list()
     for class_name in sky_crypt_data['data']['dungeons']['classes'].keys():
         localized_name = skyblock_utils.dungeon_class_id_to_name(class_name)
-        level = skyblock_data['data']['dungeons']['classes'][class_name]['experience']['level']
-        classes_elements.append(Element.Text(f'{icon(f"fairysoul_dungeon_class_{class_name}")} **{localized_name}**: {level}', type=Types.Text.KMD))
+        level = sky_crypt_data['data']['dungeons']['classes'][class_name]['experience']['level']
+        classes_elements.append(Element.Text(f'{await icon(f"fairysoul_dungeon_class_{class_name}")} **{localized_name}**: {level}', type=Types.Text.KMD))
     card.append(Module.Section(Struct.Paragraph(3, *classes_elements)))
     card.append(Module.Divider())
     essence_elements = list()
-    for essence_name in skyblock_data['data']['essence']:
-        essence_elements.append(Element.Text(f'{icon(f"fairysoul_essence_{essence_name}")} {skyblock_data["data"]["essence"][essence_name]}', type=Types.Text.KMD))
-    card.append(Module.Divider())
+    for essence_name in sky_crypt_data['data']['essence']:
+        essence_elements.append(Element.Text(f'{await icon(f"fairysoul_essence_{essence_name}")} {sky_crypt_data["data"]["essence"][essence_name]}', type=Types.Text.KMD))
     card.append(Module.Section(Struct.Paragraph(3, *essence_elements)))
+    card.append(Module.Divider())
     card.append(
-        Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
+        Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)
 
 
@@ -192,7 +199,7 @@ async def skyblock_stats_slayer(bot: Bot, storage: FairySoulStorage, player: Pla
     sky_crypt_data = await sky_crypt.get_profile(player.name)
     sky_crypt_data = sky_crypt_data['profiles'][profile.id]
     card = Card()
-    card.append(Module.Header(f"| 猎手 | {player.name}"))
+    card.append(Module.Header(f"| 猎手 | {player.name} | {sky_crypt_data.get('cute_name')}"))
     card.append(Module.Divider())
     card.append(Module.Section(Element.Text(f'**猎手**', type=Types.Text.KMD)))
     card.append(Module.Section(
@@ -212,7 +219,7 @@ async def skyblock_stats_slayer(bot: Bot, storage: FairySoulStorage, player: Pla
     ))
     card.append(Module.Divider())
     card.append(
-        Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
+        Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)
 
 
@@ -230,7 +237,7 @@ async def skyblock_stats_info(bot: Bot, storage: FairySoulStorage, player: Playe
         if pet['active']:
             actived_pet = skyblock_utils.pet_id_to_name(pet['type'])
     card = Card()
-    card.append(Module.Header(f"| 基本信息 | {player.name}"))
+    card.append(Module.Header(f"| 基本信息 | {player.name} | {sky_crypt_data.get('cute_name')}"))
     card.append(Module.Divider())
     card.append(Module.Section(Element.Text('**基础数据**', type=Types.Text.KMD)))
     card.append(Module.Section(
@@ -290,7 +297,7 @@ async def skyblock_stats_info(bot: Bot, storage: FairySoulStorage, player: Playe
             Element.Text(
                 f'{await icon("fairysoul_stats_pristine")} **Pristine**: {sky_crypt_data["data"]["stats"]["pristine"]}',
                 type=Types.Text.KMD),
-            Element.Text(f'{await icon("fairysoul_stats_overflow")} **Soulflow**: {skyblock_data["soulflow"]}',
+            Element.Text(f'{await icon("fairysoul_stats_overflow")} **Soulflow**: {sky_crypt_data["raw"].get("soulflow", 0)}',
                          type=Types.Text.KMD),
         )
     ))
@@ -334,12 +341,11 @@ async def skyblock_stats_info(bot: Bot, storage: FairySoulStorage, player: Playe
     card.append(Module.Section(
         Element.Text(f'**当前宠物**: {actived_pet}\n'
                      f'{await icon("fairysoul_fairysoul")} **仙女之魂**: {skyblock_data["fairy_souls_collected"]}\n'
-                     f'{await icon("fairysoul_stats_strength")} **最高伤害**: {skyblock_data["stats"]["highest_damage"]}\n'
                      f'{await icon("fairysoul_coins")} **钱包**: {sky_crypt_data["data"]["purse"]}', type=Types.Text.KMD),
     ))
     card.append(Module.Divider())
     card.append(
-        Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
+        Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)
 
 
@@ -364,6 +370,7 @@ async def skyblock_stats_find(bot: Bot, storage: FairySoulStorage, player: Playe
     ))
     card.append(Module.Divider())
     for skyblock_profile in skyblock_data:
+        card.append(Module.Section(Element.Text(f'**档案名**: {skyblock_profile.cute_name}', type=Types.Text.KMD)))
         card.append(Module.ActionGroup(
             Element.Button('基本信息',
                            theme=Types.Theme.PRIMARY,
@@ -376,17 +383,11 @@ async def skyblock_stats_find(bot: Bot, storage: FairySoulStorage, player: Playe
             Element.Button('地下城',
                            theme=Types.Theme.PRIMARY,
                            click=Types.Click.RETURN_VAL,
-                           value=f'fairysoul_bot_skyblock_dungeon_{uuid}_{skyblock_profile.id}'),
-            Element.Button('敬请期待',
-                           theme=Types.Theme.SECONDARY,
-                           click=Types.Click.RETURN_VAL,
-                           value="coming_soon"
-                           # value=f'fairysoul_bot_skyblock_info_{uuid}_{skyblock_data.id}'
-                           )
+                           value=f'fairysoul_bot_skyblock_dungeon_{uuid}_{skyblock_profile.id}')
         ))
         card.append(Module.Divider())
     card.append(
-        Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
+        Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)
 
 
@@ -401,7 +402,7 @@ def fairysoul_update_logs() -> CardMessage:
             Module.Section(Element.Text('**2022.10.18**\n'
                                         '添加伤害计算器功能', type=Types.Text.KMD)),
             Module.Divider(),
-            Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD))
+            Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD))
         )
     )
 
@@ -435,7 +436,7 @@ def failed(message: str, user: Union[str, User, None] = None) -> CardMessage:
     else:
         card.append(Module.Section(Element.Text(f'(met){user}(met)\n{message}', type=Types.Text.KMD)))
     card.append(
-        Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
+        Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)
 
 
@@ -448,7 +449,7 @@ def success(message: str, user: Union[str, User, None] = None) -> CardMessage:
     else:
         card.append(Module.Section(Element.Text(f'(met){user}(met)\n{message}', type=Types.Text.KMD)))
     card.append(
-        Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
+        Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)
 
 
@@ -461,5 +462,5 @@ def primary(message: str, user: Union[str, User, None] = None) -> CardMessage:
     else:
         card.append(Module.Section(Element.Text(f'(met){user}(met)\n{message}', type=Types.Text.KMD)))
     card.append(
-        Module.Context(Element.Text('由 [DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
+        Module.Context(Element.Text('由 (emj)developer_deechael(emj)[2367879939990919/1DMovNiQEG04g04g][DeeChael](https://space.bilibili.com/197734515) 开发', type=Types.Text.KMD)))
     return CardMessage(card)
