@@ -2,7 +2,7 @@ import sqlite3
 from abc import ABC, abstractmethod
 from io import BytesIO
 from sqlite3 import Cursor
-from typing import Dict
+from typing import Dict, List
 
 from khl import Bot
 
@@ -45,6 +45,7 @@ class FairySoulSqliteStorage(FairySoulStorage):
 
     _file: str
     _cache: Dict[str, str] = dict()
+    _keys: List[str] = list()
 
     def __init__(self, bot: Bot, file: str):
         super().__init__(bot)
@@ -58,7 +59,7 @@ class FairySoulSqliteStorage(FairySoulStorage):
         connection.close()
 
     async def load_picture(self, key: str, default_url: str, force_update: bool = False):
-        if key not in self._cache or force_update:
+        if (key not in self._cache and key not in self._keys) or force_update:
             url = await self.bot.client.create_asset(BytesIO(await utils.fetch_url_bytes(default_url)))
             connection = sqlite3.connect(self._file)
             cursor = connection.cursor()
@@ -68,12 +69,25 @@ class FairySoulSqliteStorage(FairySoulStorage):
             connection.commit()
             connection.close()
             self._cache[key] = url
-        return self._cache[key]
-
+            self._keys.append(key)
+        else:
+            if key not in self._cache:
+                connection = sqlite3.connect(self._file)
+                cursor = connection.cursor()
+                cc = cursor.execute(f"SELECT PIC_KEY, PIC_URL from `fairy_soul_pics` WHERE PIC_KEY={key};")
+                cc.next()
+                for row in cc:
+                    self._cache[row[0]] = row[1]
+                    break
+        result = self._cache[key]
+        if len(self._cache) > 1024: # prevent out of memory
+            self._cache.clear()
+        return result
 
     def _load_cache(self, cursor: Cursor):
-        cc = cursor.execute("SELECT PIC_KEY, PIC_URL  from `fairy_soul_pics`;")
+        cc = cursor.execute("SELECT PIC_KEY, PIC_URL from `fairy_soul_pics`;")
         for row in cc:
+            if len(self._cache) >= 512: # Only cache 512 of the pics
+                break
             self._cache[row[0]] = row[1]
-
-
+            self._keys.append(row[0])

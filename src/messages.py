@@ -8,6 +8,7 @@ from storage import FairySoulStorage
 
 import skyblock_utils
 import sky_crypt
+import utils
 
 from hypixel import HypixelClient
 
@@ -124,6 +125,8 @@ async def skyblock_stats_election(bot: Bot, hypixel_client: HypixelClient, stora
 
 
 async def skyblock_stats_info(bot: Bot, storage: FairySoulStorage, player: Player, profile: SkyblockProfile) -> CardMessage:
+    async def icon(emoji_id: str) -> str:
+        return await utils.emoji(bot, '2367879939990919', emoji_id)
     skyblock_data = profile.extra['members'][player.uuid.replace("-", "")]
     sky_crypt_data = await sky_crypt.get_profile(player.name)
     sky_crypt_data = sky_crypt_data['profiles'][profile.id]
@@ -139,28 +142,27 @@ async def skyblock_stats_info(bot: Bot, storage: FairySoulStorage, player: Playe
     card.append(Module.Section(
         Struct.Paragraph(
             3,
-            Element.Text(f'**❤ 生命值**: {sky_crypt_data["data"]["stats"]["health"]}', type=Types.Text.KMD),
-            Element.Text(f'**❈ 防御值**: {sky_crypt_data["data"]["stats"]["defense"]}', type=Types.Text.KMD),
-            Element.Text(f'**❁ 力量值**: {sky_crypt_data["data"]["stats"]["strength"]}', type=Types.Text.KMD),
-            Element.Text(f'**✦ 速度**: {sky_crypt_data["data"]["stats"]["strength"]}', type=Types.Text.KMD),
-            Element.Text(f'**☣ 暴击率**: {sky_crypt_data["data"]["stats"]["crit_chance"]}', type=Types.Text.KMD),
-            Element.Text(f'**☠ 暴击伤害**: {sky_crypt_data["data"]["stats"]["crit_damage"]}', type=Types.Text.KMD),
-            Element.Text(f'**✎ 智力**: {sky_crypt_data["data"]["stats"]["intelligence"]}', type=Types.Text.KMD),
-            Element.Text(f'**⚔ 攻击速度**: {sky_crypt_data["data"]["stats"]["bonus_attack_speed"]}', type=Types.Text.KMD),
-            Element.Text(f'**α 海洋生物机率**: {sky_crypt_data["data"]["stats"]["sea_creature_chance"]}',
-                         type=Types.Text.KMD),
-            Element.Text(f'**✯ 魔力探寻**: {sky_crypt_data["data"]["stats"]["magic_find"]}', type=Types.Text.KMD),
-            Element.Text(f'**♣ 宠物幸运**: {sky_crypt_data["data"]["stats"]["pet_luck"]}', type=Types.Text.KMD),
-            # Element.Text(f'**❂ 真实防御**: {sky_crypt_data["data"]["stats"]["strength"]}', type=Types.Text.KMD),
-            Element.Text(f'**❂ 真实防御**: -1', type=Types.Text.KMD),
-            Element.Text(f'**⫽ Ferocity**: {sky_crypt_data["data"]["stats"]["ferocity"]}', type=Types.Text.KMD),
-            Element.Text(f'**๑ 技能伤害**: {sky_crypt_data["data"]["stats"]["ability_damage"]}', type=Types.Text.KMD),
-            Element.Text(f'**⸕ 采矿速度**: {sky_crypt_data["data"]["stats"]["mining_speed"]}', type=Types.Text.KMD),
-            Element.Text(f'**☘ 采矿时运**: {sky_crypt_data["data"]["stats"]["mining_fortune"]}', type=Types.Text.KMD),
-            Element.Text(f'**☘ 农业时运**: {sky_crypt_data["data"]["stats"]["farming_fortune"]}', type=Types.Text.KMD),
-            Element.Text(f'**☘ 采集时运**: {sky_crypt_data["data"]["stats"]["foraging_fortune"]}', type=Types.Text.KMD),
-            Element.Text(f'**✧ Pristine**: {sky_crypt_data["data"]["stats"]["pristine"]}', type=Types.Text.KMD),
-            Element.Text(f'**ʬ Soulflow**: {skyblock_data["soulflow"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_health")} **生命值**: {sky_crypt_data["data"]["stats"]["health"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_defense")} **防御值**: {sky_crypt_data["data"]["stats"]["defense"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_strength")} **力量值**: {sky_crypt_data["data"]["stats"]["strength"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_speed")} **速度**: {sky_crypt_data["data"]["stats"]["strength"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_cirt_chance")} **暴击率**: {sky_crypt_data["data"]["stats"]["crit_chance"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_cirt_damage")} **暴击伤害**: {sky_crypt_data["data"]["stats"]["crit_damage"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_intelligence")} **智力**: {sky_crypt_data["data"]["stats"]["intelligence"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_attackspeed")} **攻击速度**: {sky_crypt_data["data"]["stats"]["bonus_attack_speed"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_sc_chance")} **SC机率**: {sky_crypt_data["data"]["stats"]["sea_creature_chance"]}',type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_magic_find")} **魔力探寻**: {sky_crypt_data["data"]["stats"]["magic_find"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_pet_luck")} **宠物幸运**: {sky_crypt_data["data"]["stats"]["pet_luck"]}', type=Types.Text.KMD),
+            # Element.Text(f'{await icon("fairysoul_stats_true_defense")} **真实防御**: {sky_crypt_data["data"]["stats"]["strength"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_true_defense")} **真实防御**: -1', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_ferocity")} **Ferocity**: {sky_crypt_data["data"]["stats"]["ferocity"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_ability_damage")} **技能伤害**: {sky_crypt_data["data"]["stats"]["ability_damage"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_mining_speed")} **采矿速度**: {sky_crypt_data["data"]["stats"]["mining_speed"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_fortune")} **采矿时运**: {sky_crypt_data["data"]["stats"]["mining_fortune"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_fortune")} **农业时运**: {sky_crypt_data["data"]["stats"]["farming_fortune"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_fortune")} **采集时运**: {sky_crypt_data["data"]["stats"]["foraging_fortune"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_pristine")} **Pristine**: {sky_crypt_data["data"]["stats"]["pristine"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_stats_overflow")} **Soulflow**: {skyblock_data["soulflow"]}', type=Types.Text.KMD),
         )
     ))
     card.append(Module.Divider())
@@ -169,15 +171,15 @@ async def skyblock_stats_info(bot: Bot, storage: FairySoulStorage, player: Playe
     card.append(Module.Section(
         Struct.Paragraph(
             3,
-            Element.Text(f'**农业**: {sky_crypt_data["data"]["levels"]["farming"]["level"]}', type=Types.Text.KMD),
-            Element.Text(f'**采矿**: {sky_crypt_data["data"]["levels"]["mining"]["level"]}', type=Types.Text.KMD),
-            Element.Text(f'**战斗**: {sky_crypt_data["data"]["levels"]["combat"]["level"]}', type=Types.Text.KMD),
-            Element.Text(f'**采集**: {sky_crypt_data["data"]["levels"]["foraging"]["level"]}', type=Types.Text.KMD),
-            Element.Text(f'**渔业**: {sky_crypt_data["data"]["levels"]["fishing"]["level"]}', type=Types.Text.KMD),
-            Element.Text(f'**附魔**: {sky_crypt_data["data"]["levels"]["enchanting"]["level"]}', type=Types.Text.KMD),
-            Element.Text(f'**炼金**: {sky_crypt_data["data"]["levels"]["alchemy"]["level"]}', type=Types.Text.KMD),
-            Element.Text(f'**驯养**: {sky_crypt_data["data"]["levels"]["taming"]["level"]}', type=Types.Text.KMD),
-            Element.Text(f'**木工**: {sky_crypt_data["data"]["levels"]["carpentry"]["level"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_skills_farming")} **农业**: {sky_crypt_data["data"]["levels"]["farming"]["level"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_skills_mining")} **采矿**: {sky_crypt_data["data"]["levels"]["mining"]["level"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_skills_combat")} **战斗**: {sky_crypt_data["data"]["levels"]["combat"]["level"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_skills_foraging")} **采集**: {sky_crypt_data["data"]["levels"]["foraging"]["level"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_skills_fishing")} **渔业**: {sky_crypt_data["data"]["levels"]["fishing"]["level"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_skills_enchanting")} **附魔**: {sky_crypt_data["data"]["levels"]["enchanting"]["level"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_skills_alchemy")} **炼金**: {sky_crypt_data["data"]["levels"]["alchemy"]["level"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_skills_taming")} **驯养**: {sky_crypt_data["data"]["levels"]["taming"]["level"]}', type=Types.Text.KMD),
+            Element.Text(f'{await icon("fairysoul_skills_carpentry")} **木工**: {sky_crypt_data["data"]["levels"]["carpentry"]["level"]}', type=Types.Text.KMD),
         )
     ))
     card.append(Module.Divider())
@@ -201,9 +203,9 @@ async def skyblock_stats_info(bot: Bot, storage: FairySoulStorage, player: Playe
     card.append(Module.Section(Element.Text('**其他**', type=Types.Text.KMD)))
     card.append(Module.Section(
         Element.Text(f'**当前宠物**: {actived_pet}\n'
-                     f'**仙女之魂**: {skyblock_data["fairy_souls_collected"]}\n'
-                     f'**最高伤害**: {skyblock_data["stats"]["highest_damage"]}\n'
-                     f'**钱包**: {skyblock_data["coin_purse"]}', type=Types.Text.KMD),
+                     f'{await icon("fairysoul_fairysoul")} **仙女之魂**: {skyblock_data["fairy_souls_collected"]}\n'
+                     f'{await icon("fairysoul_stats_strength")} **最高伤害**: {skyblock_data["stats"]["highest_damage"]}\n'
+                     f'{await icon("fairysoul_coins")} **钱包**: {skyblock_data["coin_purse"]}', type=Types.Text.KMD),
     ))
     card.append(Module.Divider())
     card.append(
